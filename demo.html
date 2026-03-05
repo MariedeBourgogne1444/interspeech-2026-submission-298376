@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiaMoE-TTS: Anonymous Demo | Interspeech 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px 60px;
+            line-height: 1.5;
+            color: #1a1a1a;
+            background: #ffffff;
+        }
+        
+        /* 匿名标识 */
+        .anonymous-banner {
+            background: #f0f0f0;
+            color: #333;
+            text-align: center;
+            padding: 10px;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+        }
+        
+        /* 标题区域 */
+        .title-section {
+            text-align: center;
+            margin: 30px 0 20px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .authors {
+            color: #555;
+            font-size: 18px;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        
+        .venue {
+            color: #c00;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        /* 摘要 */
+        .abstract {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 16px;
+            margin: 30px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        .abstract h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .abstract p {
+            color: #34495e;
+            text-align: justify;
+        }
+        
+        /* 目录导航 */
+        .toc {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border: 1px solid #eee;
+        }
+        
+        .toc h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .toc-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px 30px;
+        }
+        
+        .toc-item {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .toc-item:hover {
+            border-bottom-color: #3498db;
+        }
+        
+        /* 章节 */
+        .section {
+            margin: 50px 0 30px;
+            scroll-margin-top: 20px;
+        }
+        
+        .section h2 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        /* 主图区域 */
+        .figure-container {
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            border: 2px dashed #aaa;
+            margin: 20px 0;
+        }
+        
+        .fig-caption {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* 方言区块内部样式 — 模型网格 */
+        .dialect-models {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .model-column {
+            flex: 1 1 220px;               /* 至少220px宽，可换行 */
+            min-width: 220px;
+            background: #fafafa;
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid #e6e6e6;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            transition: all 0.1s ease;
+        }
+        
+        .model-column:hover {
+            border-color: #b0d4f0;
+            background: #ffffff;
+        }
+        
+        .model-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1f4e7a;
+            border-left: 4px solid #3498db;
+            padding-left: 12px;
+            background: linear-gradient(to right, #f0f8ff, transparent);
+        }
+        
+        .example-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .example-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .example-label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #444;
+            margin: 8px 0 4px;
+        }
+        
+        .audio-player {
+            margin: 5px 0 8px;
+        }
+        
+        .audio-player audio {
+            width: 100%;
+            height: 36px;
+        }
+        
+        .text-sample {
+            background: #f5f5f5;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #333;
+            margin: 5px 0 10px;
+            border-left: 2px solid #aaa;
+        }
+        
+        .speaker-badge {
+            display: inline-block;
+            background: #e1f0fa;
+            color: #2980b9;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            margin: 5px 0 10px;
+        }
+
+        /* 案例卡片外框 (方言整体卡片) */
+        .case-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .case-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1e3c5c;
+            margin-bottom: 5px;
+        }
+        
+        .case-sub {
+            color: #5a6b7a;
+            font-size: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eef2f6;
+            padding-bottom: 10px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            margin-top: 60px;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 匿名标识 -->
+    <div class="anonymous-banner">
+        ⚠️ Anonymous submission to Interspeech 2026 · Double-blind review
+    </div>
+
+    <!-- 标题区域 -->
+    <div class="title-section">
+        <h1>DiaMoE-TTS: A Unified IPA-based Framework<br>for Low-Resource Dialect Text-to-Speech</h1>
+        <div class="authors">Anonymous Authors</div>
+        <div class="venue">Submitted to Interspeech 2026</div>
+    </div>
+
+    <!-- 摘要 -->
+    <div class="abstract">
+        <h2>Abstract</h2>
+        <p>Dialect speech embodies rich cultural and linguistic diversity, yet building a unified text-to-speech (TTS) system for dialects remains challenging due to scarce data, inconsistent phonetic representations, and dialect interference in joint modeling. We explore a unified dialect TTS pipeline based on a Diffusion Transformer (DiT) architecture. A unified International Phonetic Alphabet (IPA) front-end is adopted to reduce pronunciation ambiguity across dialects. Built upon the F5-TTS framework, we introduce a dialect-aware Mixture-of-Experts (MoE) text encoder to mitigate style averaging in multidialect training. For low-resource dialect expansion, we employ parameter-efficient fine-tuning (PEFT) to enable adaptation with only a few hours of speech data. We further investigate incorporating high-quality dialect data into the unified model. Experiments show that GRPO-based reinforcement learning reduces the word error rate (WER) for both the target dialect and several related dialects, outperforming simple retraining with the same data. Our work provides a reproducible baseline for scalable multidialect TTS under open-data conditions.</p>
+    </div>
+
+    <!-- 目录 -->
+    <div class="toc">
+        <h3>Contents</h3>
+        <div class="toc-links">
+            <span class="toc-item" onclick="document.getElementById('overview').scrollIntoView({behavior: 'smooth'})">📌 System Overview</span>
+            <span class="toc-item" onclick="document.getElementById('main-results').scrollIntoView({behavior: 'smooth'})">🏆 Main Results (Baseline Comparison)</span>
+            <span class="toc-item" onclick="document.getElementById('ablation-studies').scrollIntoView({behavior: 'smooth'})">🧪 Ablation Studies</span>
+            <span class="toc-item" onclick="document.getElementById('optimization-exp').scrollIntoView({behavior: 'smooth'})">🚀 Optimization with High-Quality Dialect Data (Chengduhua)</span>
+        </div>
+    </div>
+
+    <!-- System Overview 章节（主图占位） -->
+    <div class="section" id="overview">
+        <h2>System Overview</h2>
+        <img src="demofile/totaldiamoe.png" 
+            alt="DiaMoE-TTS Architecture Diagram" 
+            style="display: block; margin: 0 auto; max-width: 100%;">
+        <div class="fig-caption">
+            Figure 1: The overall architecture of the proposed dialect TTS system. Stages 1 & 2 jointly train on Mandarin and multiple dialects with MoE; stage 3 adapts to new dialect via PEFT.
+        </div>
+    </div>
+
+
+    <!-- 在 style 标签里加一点点样式 (可选) -->
+    <style>
+        .experiment-group-title {
+            font-size: 28px;
+            color: #2c3e50;
+            margin: 60px 0 30px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2c3e50;
+            text-align: center;
+        }
+        .experiment-desc {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+
+    <!-- 1. 主实验部分 -->
+    <div id="main-results">
+        <h2 class="experiment-group-title">🏆 Main Results: Multidialect Baseline Comparison</h2>
+        <p class="experiment-desc">
+            Comparison of DiaMoE-TTS against strong baselines (Qwen TTS, Edge TTS, Cosyvoice2) across four major dialects.
+        </p>
+        
+        <!-- 【操作】：把你原来所有的方言卡片 (成都、石家庄、郑州、西安) 剪切并粘贴到这里面 -->
+        <!-- 例如：把 <div class="section" id="chengdu">...</div> 整个移进来，并去掉 id="chengdu" 或者保留以便锚点跳转 -->
+        <div class="section" id="chengdu">
+        <h2>🗣️ Chengduhua · 成都话 (4 TTS systems)</h2>
+        
+        <!-- 单个方言卡片，包含四个模型列 -->
+        <div class="case-card">
+            <div class="case-title">成都话 多系统对比</div>
+            
+            <div class="dialect-models">
+                <!-- 1. Qwen TTS -->
+                <div class="model-column">
+                    <div class="model-name">Qwen TTS</div>
+                    <!-- 例子 1 (女声) -->
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/qwtts_cd1.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">哔哩哔哩的观众朋友们大家好，我是来自成都的张小弥。</div>
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/qwtts_cd3.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">就是来，跑来关注我的朋友，肯定晓得我是成都人。</div>
+                    </div>
+                    <!-- 例子 2 (男声) 这里也放两个合成示例，为了简洁只展示男声对应的2个合成 -->
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/qwtts_cd4.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">因为我的公众号叫“成都妹儿在英法”，有点儿牙尖噶？</div>
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/qwtts_cd5.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">然后喃今天这只视频喃，我其实是想先跟，用四川话跟大家摆点儿龙门阵。</div>
+                    </div>
+                </div>
+
+                <!-- 2. Edge TTS -->
+                <div class="model-column">
+                    <div class="model-name">Edge TTS</div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/edge_cd1.mp3" type="audio/wav"></audio></div>
+                        <div class="text-sample">哔哩哔哩的观众朋友们大家好，我是来自成都的张小弥。</div>
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/edge_cd3.mp3" type="audio/wav"></audio></div>
+                        <div class="text-sample">就是来，跑来关注我的朋友，肯定晓得我是成都人。</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/edge_cd4.mp3" type="audio/wav"></audio></div>
+                        <div class="text-sample">因为我的公众号叫“成都妹儿在英法”，有点儿牙尖噶？</div>
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/edge_cd5.mp3" type="audio/wav"></audio></div>
+                        <div class="text-sample">然后喃今天这只视频喃，我其实是想先跟，用四川话跟大家摆点儿龙门阵。</div>
+                    </div>
+                </div>
+
+                <!-- 3. Cosyvoice2 -->
+                <div class="model-column">
+                    <div class="model-name">Cosyvoice2</div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/cosy_cd1.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">哔哩哔哩的观众朋友们大家好，我是来自成都的张小弥。</div>
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/cosy_cd3.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">就是来，跑来关注我的朋友，肯定晓得我是成都人。</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/cosy_cd4.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">因为我的公众号叫“成都妹儿在英法”，有点儿牙尖噶？</div>
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/cosy_cd5.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">然后喃今天这只视频喃，我其实是想先跟，用四川话跟大家摆点儿龙门阵。</div>
+                    </div>
+                </div>
+
+                <!-- 4. DiaMoE-TTS (ours) -->
+                <div class="model-column">
+                    <div class="model-name">DiaMoE-TTS (Ours)</div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_cd1.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">哔哩哔哩的观众朋友们大家好，我是来自成都的张小弥。</div>
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_cd3.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">就是来，跑来关注我的朋友，肯定晓得我是成都人。</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_cd4.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">因为我的公众号叫“成都妹儿在英法”，有点儿牙尖噶？</div>
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_cd5.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">然后喃今天这只视频喃，我其实是想先跟，用四川话跟大家摆点儿龙门阵。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========= sjz话 () ========= -->
+    <div class="section" id="shijiazhuang">
+        <h2>🗣️ Shijiazhuanghua · 石家庄话 (4 TTS systems)</h2>
+        
+        <!-- 单个方言卡片，包含四个模型列 -->
+        <div class="case-card">
+            <div class="case-title">石家庄话 多系统对比</div>
+            
+            <div class="dialect-models">
+                <!-- 3. 假设某个模型 不支持话 -->
+                <div class="model-column">
+                    <div class="model-name">Qwen TTS</div>
+                    
+                    <!-- 整个内容区域替换为提示信息 -->
+                    <div class="example-item" style="background-color: #f9f9f9; border: 1px dashed #ccc; padding: 20px; text-align: center; color: #888; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">🚫</div>
+                        <div style="font-weight: bold;">不支持该方言</div>
+                        <div style="font-size: 12px; margin-top: 5px;">Qwen TTS 目前未提供石家庄话语音包</div>
+                    </div>
+                </div>
+
+                <!-- 2. 假设某个模型 不支持话 -->
+                <div class="model-column">
+                    <div class="model-name">Edge TTS</div>
+                    
+                    <!-- 整个内容区域替换为提示信息 -->
+                    <div class="example-item" style="background-color: #f9f9f9; border: 1px dashed #ccc; padding: 20px; text-align: center; color: #888; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">🚫</div>
+                        <div style="font-weight: bold;">不支持该方言</div>
+                        <div style="font-size: 12px; margin-top: 5px;">Edge TTS 目前未提供石家庄话语音包</div>
+                    </div>
+                </div>
+
+                <!-- 3. 假设某个模型 不支持话 -->
+                <div class="model-column">
+                    <div class="model-name">Cosyvoice2</div>
+                    
+                    <!-- 整个内容区域替换为提示信息 -->
+                    <div class="example-item" style="background-color: #f9f9f9; border: 1px dashed #ccc; padding: 20px; text-align: center; color: #888; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">🚫</div>
+                        <div style="font-weight: bold;">不支持该方言</div>
+                        <div style="font-size: 12px; margin-top: 5px;">Cosyvoice2 目前未提供石家庄话语音包</div>
+                    </div>
+                </div>
+
+                <!-- 4. DiaMoE-TTS (ours) -->
+                <div class="model-column">
+                    <div class="model-name">DiaMoE-TTS (Ours)</div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_sjz1.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">今鹿泉有个词儿，你要是能解释明白咾。</div>
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_sjz2.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">才能证明你是，纯纯哩鹿泉人。</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_sjz3.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">解释不明白呀，这鹿泉话儿呀，你还得好好儿哩学学。</div>
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_sjz10.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">鹿泉哩我，宁要鹿泉一张床，也不要纽约一套房。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========= sjz话 () ========= -->
+    <div class="section" id="zhengzhou">
+        <h2>🗣️ Zhengzhouhua · 郑州话 (4 TTS systems)</h2>
+        
+        <!-- 单个方言卡片，包含四个模型列 -->
+        <div class="case-card">
+            <div class="case-title">郑州话 多系统对比</div>
+            
+            <div class="dialect-models">
+                <!-- 3. 假设某个模型 不支持话 -->
+                <div class="model-column">
+                    <div class="model-name">Qwen TTS</div>
+                    
+                    <!-- 整个内容区域替换为提示信息 -->
+                    <div class="example-item" style="background-color: #f9f9f9; border: 1px dashed #ccc; padding: 20px; text-align: center; color: #888; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">🚫</div>
+                        <div style="font-weight: bold;">不支持该方言</div>
+                        <div style="font-size: 12px; margin-top: 5px;">Qwen TTS 目前未提供郑州话语音包</div>
+                    </div>
+                </div>
+
+                <!-- 2. 假设某个模型 不支持话 -->
+                <div class="model-column">
+                    <div class="model-name">Edge TTS</div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/edge_zz1.mp3" type="audio/wav"></audio></div>
+                        <div class="text-sample">小黑你真的要走了么？</div>
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/edge_zz2.mp3" type="audio/wav"></audio></div>
+                        <div class="text-sample">没有，因为我一看到你就觉得就是小黑。</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/edge_zz4.mp3" type="audio/wav"></audio></div>
+                        <div class="text-sample">你头发咋是白的呀？</div>
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/edge_zz5.mp3" type="audio/wav"></audio></div>
+                        <div class="text-sample">啊？难道你真的比俺爷还大咧？</div>
+                    </div>
+                </div>
+
+                <!-- 3. 假设某个模型 不支持话 -->
+                <div class="model-column">
+                    <div class="model-name">Cosyvoice2</div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/cosy_zz1.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">小黑你真的要走了么？</div>
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/cosy_zz2.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">没有，因为我一看到你就觉得就是小黑。</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/cosy_zz4.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">你头发咋是白的呀？</div>
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/cosy_zz5.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">啊？难道你真的比俺爷还大咧？</div>
+                    </div>
+                </div>
+
+                <!-- 4. DiaMoE-TTS (ours) -->
+                <div class="model-column">
+                    <div class="model-name">DiaMoE-TTS (Ours)</div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_zz1.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">小黑你真的要走了么？</div>
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_zz2.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">没有，因为我一看到你就觉得就是小黑。</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_zz4.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">你头发咋是白的呀？</div>
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_zz5.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">啊？难道你真的比俺爷还大咧？</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        <!-- ========= 西安话 (XIAN) ========= -->
+    <div class="section" id="xian">
+        <h2>🗣️ Xi'anhua · 西安话 (4 TTS systems)</h2>
+        
+        <!-- 单个方言卡片，包含四个模型列 -->
+        <div class="case-card">
+            <div class="case-title">西安话 多系统对比</div>
+            
+            <div class="dialect-models">
+                <!-- 3. 假设某个模型 不支持话 -->
+                <div class="model-column">
+                    <div class="model-name">Qwen TTS</div>
+                    
+                    <!-- 整个内容区域替换为提示信息 -->
+                    <div class="example-item" style="background-color: #f9f9f9; border: 1px dashed #ccc; padding: 20px; text-align: center; color: #888; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">🚫</div>
+                        <div style="font-weight: bold;">不支持该方言</div>
+                        <div style="font-size: 12px; margin-top: 5px;">Qwen TTS 目前未提供西安话语音包</div>
+                    </div>
+                </div>
+
+                <!-- 2. Edge TTS -->
+                <div class="model-column">
+                    <div class="model-name">Edge TTS</div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/edge_xa2.mp3" type="audio/wav"></audio></div>
+                        <div class="text-sample">全都是美女，一个比一个长的水色啊，家人们。</div>
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/edge_xa5.mp3" type="audio/wav"></audio></div>
+                        <div class="text-sample">哎呀，这女娃长的还可以嘛，可惜会说话。</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/edge_xa6.mp3" type="audio/wav"></audio></div>
+                        <div class="text-sample">唉，可惜长了一张嘴。</div>
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/edge_xa7.mp3" type="audio/wav"></audio></div>
+                        <div class="text-sample">你下次能不能不要说话，你不要说话得行啊？</div>
+                    </div>
+                </div>
+
+                <!-- 3. 假设某个模型 不支持话 -->
+                <div class="model-column">
+                    <div class="model-name">Cosyvoice2</div>
+                    
+                    <!-- 整个内容区域替换为提示信息 -->
+                    <div class="example-item" style="background-color: #f9f9f9; border: 1px dashed #ccc; padding: 20px; text-align: center; color: #888; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">🚫</div>
+                        <div style="font-weight: bold;">不支持该方言</div>
+                        <div style="font-size: 12px; margin-top: 5px;">Cosyvoice2 目前未提供西安话语音包</div>
+                    </div>
+                </div>
+
+                <!-- 4. DiaMoE-TTS (ours) -->
+                <div class="model-column">
+                    <div class="model-name">DiaMoE-TTS (Ours)</div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成女声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_xa2.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">全都是美女，一个比一个长的水色啊，家人们。</div>
+                        <div class="example-label">🔊 合成女声2</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_xa5.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">哎呀，这女娃长的还可以嘛，可惜会说话。</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_xa6.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">唉，可惜长了一张嘴。</div>
+                        <div class="example-label">🔊 合成男声</div>
+                        <div class="audio-player"><audio controls><source src="demofile/our_xa7.wav" type="audio/wav"></audio></div>
+                        <div class="text-sample">你下次能不能不要说话，你不要说话得行啊？</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    </div>
+
+    <!-- 2. 消融实验部分 -->
+    <div id="ablation-studies">
+        <h2 class="experiment-group-title">🧪 Ablation Studies</h2>
+        <p class="experiment-desc">
+            Analyzing the impact of IPA front-end and MoE structure. 
+        </p>
+
+        <!-- 【操作】：这里放专门用于展示消融实验的音频对比 -->
+        <!-- 建议复制一套方言卡片，但只保留 "Ours (Full)" vs "Ours (w/o MoE)" 这样的列，或者展示特定的失败/成功案例 -->
+        <!-- 你可以复用上面的 .case-card 结构，修改里面的 model-column 内容即可 -->
+          <!-- ========= 成都话 () ========= -->
+        <div class="section">
+            <h2>🗣️ Chengduhua · 成都话</h2>
+            
+            <!-- 单个方言卡片，包含四个模型列 -->
+            <div class="case-card">
+                <div class="case-title">成都话 架构消融</div>
+                
+                <div class="dialect-models">
+
+                    <!-- 2. Edge TTS -->
+                    <div class="model-column">
+                        <div class="model-name">w/o MoE</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_cd1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">哔哩哔哩的观众朋友们大家好，我是来自成都的张小弥。</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_cd3.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">就是来，跑来关注我的朋友，肯定晓得我是成都人。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_cd4.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">因为我的公众号叫“成都妹儿在英法”，有点儿牙尖噶？</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_cd5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">然后喃今天这只视频喃，我其实是想先跟，用四川话跟大家摆点儿龙门阵。</div>
+                        </div>
+                    </div>
+
+                    <!-- 3. 假设某个模型 不支持话 -->
+                    <div class="model-column">
+                        <div class="model-name">w/o IPA</div>                        
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_cd1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">哔哩哔哩的观众朋友们大家好，我是来自成都的张小弥。</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_cd3.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">就是来，跑来关注我的朋友，肯定晓得我是成都人。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_cd4.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">因为我的公众号叫“成都妹儿在英法”，有点儿牙尖噶？</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_cd5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">然后喃今天这只视频喃，我其实是想先跟，用四川话跟大家摆点儿龙门阵。</div>
+                        </div>
+                    </div>
+
+                    <!-- 4. DiaMoE-TTS (ours) -->
+                    <div class="model-column">
+                        <div class="model-name">DiaMoE-TTS (Ours)</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_cd1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">哔哩哔哩的观众朋友们大家好，我是来自成都的张小弥。</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_cd3.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">就是来，跑来关注我的朋友，肯定晓得我是成都人。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_cd4.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">因为我的公众号叫“成都妹儿在英法”，有点儿牙尖噶？</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_cd5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">然后喃今天这只视频喃，我其实是想先跟，用四川话跟大家摆点儿龙门阵。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🗣️ Shijiazhuanghua · 石家庄话</h2>
+            
+            <!-- 单个方言卡片，包含四个模型列 -->
+            <div class="case-card">
+                <div class="case-title">石家庄话 架构消融</div>
+                
+                <div class="dialect-models">
+
+                    <!-- 2. Edge TTS -->
+                    <div class="model-column">
+                        <div class="model-name">w/o MoE</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_sjz1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">今鹿泉有个词儿，你要是能解释明白咾。</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_sjz2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">才能证明你是，纯纯哩鹿泉人。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_sjz3.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">解释不明白呀，这鹿泉话儿呀，你还得好好儿哩学学。</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_sjz10.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">鹿泉哩我，宁要鹿泉一张床，也不要纽约一套房。</div>
+                        </div>
+                    </div>
+
+                    <!-- 3. 假设某个模型 不支持话 -->
+                    <div class="model-column">
+                        <div class="model-name">w/o IPA</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_sjz1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">今鹿泉有个词儿，你要是能解释明白咾。</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_sjz2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">才能证明你是，纯纯哩鹿泉人。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_sjz3.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">解释不明白呀，这鹿泉话儿呀，你还得好好儿哩学学。</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_sjz10.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">鹿泉哩我，宁要鹿泉一张床，也不要纽约一套房。</div>
+                        </div>
+                    </div>
+
+                    <!-- 4. DiaMoE-TTS (ours) -->
+                    <div class="model-column">
+                        <div class="model-name">DiaMoE-TTS (Ours)</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_sjz1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">今鹿泉有个词儿，你要是能解释明白咾。</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_sjz2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">才能证明你是，纯纯哩鹿泉人。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_sjz3.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">解释不明白呀，这鹿泉话儿呀，你还得好好儿哩学学。</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_sjz10.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">鹿泉哩我，宁要鹿泉一张床，也不要纽约一套房。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🗣️ Zhengzhouhua · 郑州话</h2>
+            
+            <!-- 单个方言卡片，包含四个模型列 -->
+            <div class="case-card">
+                <div class="case-title">郑州话 架构消融</div>
+                
+                <div class="dialect-models">
+
+                    <!-- 2. Edge TTS -->
+                    <div class="model-column">
+                        <div class="model-name">w/o MoE</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_zz1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">小黑你真的要走了么？</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_zz2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">没有，因为我一看到你就觉得就是小黑。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_zz4.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">你头发咋是白的呀？</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_zz5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">啊？难道你真的比俺爷还大咧？</div>
+                        </div>
+                    </div>
+
+                    <!-- 3. 假设某个模型 不支持话 -->
+                    <div class="model-column">
+                        <div class="model-name">w/o IPA</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_zz1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">小黑你真的要走了么？</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_zz2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">没有，因为我一看到你就觉得就是小黑。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_zz4.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">你头发咋是白的呀？</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_zz5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">啊？难道你真的比俺爷还大咧？</div>
+                        </div>
+                    </div>
+
+                    <!-- 4. DiaMoE-TTS (ours) -->
+                    <div class="model-column">
+                        <div class="model-name">DiaMoE-TTS (Ours)</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_zz1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">小黑你真的要走了么？</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_zz2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">没有，因为我一看到你就觉得就是小黑。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_zz4.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">你头发咋是白的呀？</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_zz5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">啊？难道你真的比俺爷还大咧？</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🗣️ Xi'anhua · 西安话</h2>
+            
+            <!-- 单个方言卡片，包含四个模型列 -->
+            <div class="case-card">
+                <div class="case-title">西安话 架构消融</div>
+                
+                <div class="dialect-models">
+
+                    <!-- 2. Edge TTS -->
+                    <div class="model-column">
+                        <div class="model-name">w/o MoE</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_xa2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">全都是美女，一个比一个长的水色啊，家人们。</div>
+                            <div class="example-label">🔊 合成女声2</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_xa5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">哎呀，这女娃长的还可以嘛，可惜会说话。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_xa6.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">唉，可惜长了一张嘴。</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/womoe_xa7.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">你下次能不能不要说话，你不要说话得行啊？</div>
+                        </div>
+                    </div>
+
+                    <!-- 3. 假设某个模型 不支持话 -->
+                    <div class="model-column">
+                        <div class="model-name">w/o IPA</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_xa2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">全都是美女，一个比一个长的水色啊，家人们。</div>
+                            <div class="example-label">🔊 合成女声2</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_xa5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">哎呀，这女娃长的还可以嘛，可惜会说话。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_xa6.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">唉，可惜长了一张嘴。</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/py_xa7.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">你下次能不能不要说话，你不要说话得行啊？</div>
+                        </div>
+                    </div>
+
+                    <!-- 4. DiaMoE-TTS (ours) -->
+                    <div class="model-column">
+                        <div class="model-name">DiaMoE-TTS (Ours)</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_xa2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">全都是美女，一个比一个长的水色啊，家人们。</div>
+                            <div class="example-label">🔊 合成女声2</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_xa5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">哎呀，这女娃长的还可以嘛，可惜会说话。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_xa6.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">唉，可惜长了一张嘴。</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_xa7.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">你下次能不能不要说话，你不要说话得行啊？</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 3. 优化与低资源实验部分 -->
+    <div id="optimization-exp">
+        <h2 class="experiment-group-title">🚀 Optimization with High-Quality Dialect Data (Chengduhua)</h2>
+        <p class="experiment-desc">
+            Comparing the pretrained base, continued training, and GRPO-optimized models to demonstrate how reinforcement learning further enhances naturalness and pronunciation accuracy beyond standard fine-tuning.
+        </p>
+
+        <!-- 【操作】：这里放低资源（比如只有1小时数据）下的合成效果，或者RL优化前后的对比 -->
+        <!-- 同样复用 .case-card 结构 -->
+                   <!-- ========= 成都话 () ========= -->
+        <div class="section">
+            <h2>🗣️ Chengduhua · 成都话</h2>
+            
+            <!-- 单个方言卡片，包含四个模型列 -->
+            <div class="case-card">
+                <div class="case-title">成都话 不同优化方法对比</div>
+                
+                <div class="dialect-models">
+
+                    <!-- 2. Edge TTS -->
+                    <div class="model-column">
+                        <div class="model-name">Pretrained Only</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_cd1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">哔哩哔哩的观众朋友们大家好，我是来自成都的张小弥。</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_cd3.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">就是来，跑来关注我的朋友，肯定晓得我是成都人。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_cd4.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">因为我的公众号叫“成都妹儿在英法”，有点儿牙尖噶？</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_cd5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">然后喃今天这只视频喃，我其实是想先跟，用四川话跟大家摆点儿龙门阵。</div>
+                        </div>
+                    </div>
+
+                    <!-- 3. 假设某个模型 不支持话 -->
+                    <div class="model-column">
+                        <div class="model-name">Continued Training</div>                        
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_cd1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">哔哩哔哩的观众朋友们大家好，我是来自成都的张小弥。</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_cd3.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">就是来，跑来关注我的朋友，肯定晓得我是成都人。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_cd4.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">因为我的公众号叫“成都妹儿在英法”，有点儿牙尖噶？</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_cd5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">然后喃今天这只视频喃，我其实是想先跟，用四川话跟大家摆点儿龙门阵。</div>
+                        </div>
+                    </div>
+
+                    <!-- 4. DiaMoE-TTS (ours) -->
+                    <div class="model-column">
+                        <div class="model-name">Flow-GRPO</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_cd1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">哔哩哔哩的观众朋友们大家好，我是来自成都的张小弥。</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_cd3.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">就是来，跑来关注我的朋友，肯定晓得我是成都人。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_cd4.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">因为我的公众号叫“成都妹儿在英法”，有点儿牙尖噶？</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_cd5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">然后喃今天这只视频喃，我其实是想先跟，用四川话跟大家摆点儿龙门阵。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🗣️ Shijiazhuanghua · 石家庄话</h2>
+            
+            <!-- 单个方言卡片，包含四个模型列 -->
+            <div class="case-card">
+                <div class="case-title">石家庄话 不同优化方法对比</div>
+                
+                <div class="dialect-models">
+
+                    <!-- 2. Edge TTS -->
+                    <div class="model-column">
+                        <div class="model-name">Pretrained Only</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_sjz1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">今鹿泉有个词儿，你要是能解释明白咾。</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_sjz2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">才能证明你是，纯纯哩鹿泉人。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_sjz3.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">解释不明白呀，这鹿泉话儿呀，你还得好好儿哩学学。</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_sjz10.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">鹿泉哩我，宁要鹿泉一张床，也不要纽约一套房。</div>
+                        </div>
+                    </div>
+
+                    <!-- 3. 假设某个模型 不支持话 -->
+                    <div class="model-column">
+                        <div class="model-name">Continued Training</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_sjz1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">今鹿泉有个词儿，你要是能解释明白咾。</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_sjz2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">才能证明你是，纯纯哩鹿泉人。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_sjz3.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">解释不明白呀，这鹿泉话儿呀，你还得好好儿哩学学。</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_sjz10.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">鹿泉哩我，宁要鹿泉一张床，也不要纽约一套房。</div>
+                        </div>
+                    </div>
+
+                    <!-- 4. DiaMoE-TTS (ours) -->
+                    <div class="model-column">
+                        <div class="model-name">Flow-GRPO</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_sjz1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">今鹿泉有个词儿，你要是能解释明白咾。</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_sjz2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">才能证明你是，纯纯哩鹿泉人。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_sjz3.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">解释不明白呀，这鹿泉话儿呀，你还得好好儿哩学学。</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_sjz10.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">鹿泉哩我，宁要鹿泉一张床，也不要纽约一套房。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🗣️ Zhengzhouhua · 郑州话</h2>
+            
+            <!-- 单个方言卡片，包含四个模型列 -->
+            <div class="case-card">
+                <div class="case-title">郑州话 不同优化方法对比</div>
+                
+                <div class="dialect-models">
+
+                    <!-- 2. Edge TTS -->
+                    <div class="model-column">
+                        <div class="model-name">Pretrained Only</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_zz1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">小黑你真的要走了么？</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_zz2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">没有，因为我一看到你就觉得就是小黑。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_zz4.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">你头发咋是白的呀？</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_zz5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">啊？难道你真的比俺爷还大咧？</div>
+                        </div>
+                    </div>
+
+                    <!-- 3. 假设某个模型 不支持话 -->
+                    <div class="model-column">
+                        <div class="model-name">Continued Training</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_zz1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">小黑你真的要走了么？</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_zz2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">没有，因为我一看到你就觉得就是小黑。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_zz4.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">你头发咋是白的呀？</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_zz5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">啊？难道你真的比俺爷还大咧？</div>
+                        </div>
+                    </div>
+
+                    <!-- 4. DiaMoE-TTS (ours) -->
+                    <div class="model-column">
+                        <div class="model-name">Flow-GRPO</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_zz1.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">小黑你真的要走了么？</div>
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_zz2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">没有，因为我一看到你就觉得就是小黑。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_zz4.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">你头发咋是白的呀？</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_zz5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">啊？难道你真的比俺爷还大咧？</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🗣️ Xi'anhua · 西安话</h2>
+            
+            <!-- 单个方言卡片，包含四个模型列 -->
+            <div class="case-card">
+                <div class="case-title">西安话 不同优化方法对比</div>
+                
+                <div class="dialect-models">
+
+                    <!-- 2. Edge TTS -->
+                    <div class="model-column">
+                        <div class="model-name">Pretrained Only</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_xa2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">全都是美女，一个比一个长的水色啊，家人们。</div>
+                            <div class="example-label">🔊 合成女声2</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_xa5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">哎呀，这女娃长的还可以嘛，可惜会说话。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_xa6.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">唉，可惜长了一张嘴。</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/our_xa7.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">你下次能不能不要说话，你不要说话得行啊？</div>
+                        </div>
+                    </div>
+
+                    <!-- 3. 假设某个模型 不支持话 -->
+                    <div class="model-column">
+                        <div class="model-name">Continued Training</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_xa2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">全都是美女，一个比一个长的水色啊，家人们。</div>
+                            <div class="example-label">🔊 合成女声2</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_xa5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">哎呀，这女娃长的还可以嘛，可惜会说话。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_xa6.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">唉，可惜长了一张嘴。</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/ct_xa7.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">你下次能不能不要说话，你不要说话得行啊？</div>
+                        </div>
+                    </div>
+
+                    <!-- 4. DiaMoE-TTS (ours) -->
+                    <div class="model-column">
+                        <div class="model-name">Flow-GRPO</div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成女声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_xa2.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">全都是美女，一个比一个长的水色啊，家人们。</div>
+                            <div class="example-label">🔊 合成女声2</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_xa5.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">哎呀，这女娃长的还可以嘛，可惜会说话。</div>
+                        </div>
+                        <div class="example-item">
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_xa6.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">唉，可惜长了一张嘴。</div>
+                            <div class="example-label">🔊 合成男声</div>
+                            <div class="audio-player"><audio controls><source src="demofile/rl_xa7.wav" type="audio/wav"></audio></div>
+                            <div class="text-sample">你下次能不能不要说话，你不要说话得行啊？</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    
+
+
+    <!-- 页脚 -->
+    <div class="footer">
+        <p>⚠️ Anonymous submission to Interspeech 2026 · Double-blind review</p>
+        <p>Audio samples are for demonstration purposes only · All materials © Anonymous Authors</p>
+    </div>
+
+    <!-- 平滑滚动 (保留原功能) -->
+    <script>
+        document.querySelectorAll('.toc-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                // 提取ID (简单处理)
+                const onclickAttr = this.getAttribute('onclick');
+                const match = onclickAttr && onclickAttr.match(/'([^']+)'/);
+                if (match) {
+                    const targetId = match[1];
+                    document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
